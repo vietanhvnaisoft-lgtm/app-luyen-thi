@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hướng Dẫn Sử Dụng - Học Cùng AI</title>
+
+    <!-- Tailwind CSS (Giữ lại để đảm bảo giao diện đẹp, gọn gàng mà không cần viết hàng ngàn dòng CSS thuần) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Google Material Symbols (Icons) -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+      }
+      /* Custom scrollbar */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 20px;
+        border: 2px solid #f1f5f9;
+      }
+
+      /* Animation classes */
+      .fade-in {
+        animation: fadeIn 0.4s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="text-slate-900 overflow-hidden">
+    <!-- App Container -->
+    <div class="flex h-screen bg-gray-50 overflow-hidden">
+      <!-- Sidebar -->
+      <aside
+        id="sidebar"
+        class="fixed inset-0 z-40 transform -translate-x-full transition-transform duration-300 md:relative md:translate-x-0 md:w-80 bg-white border-r border-slate-200 flex flex-col h-full shadow-2xl md:shadow-none"
+      >
+        <!-- Sidebar Header -->
+        <div
+          class="p-8 border-b border-slate-100 flex justify-between items-center"
+        >
+          <div>
+            <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">
+              APP LUYỆN THI
+            </h1>
+            <p class="text-base text-slate-500 mt-2 font-medium">
+              Hướng dẫn sử dụng hệ thống
+            </p>
+          </div>
+          <button
+            id="close-sidebar-btn"
+            class="md:hidden p-2 text-slate-400 hover:text-slate-600"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <!-- Navigation List -->
+        <div
+          id="nav-list"
+          class="py-6 px-4 space-y-2 flex-1 overflow-y-auto custom-scrollbar"
+        >
+          <!-- Navigation items injected via JS -->
+        </div>
+      </aside>
+
+      <!-- Mobile Overlay -->
+      <div
+        id="sidebar-overlay"
+        class="fixed inset-0 bg-black/50 z-30 hidden md:hidden glass"
+      ></div>
+
+      <!-- Main Content Area -->
+      <main
+        id="main-content"
+        class="flex-1 bg-[#F1F5F9] pt-16 md:pt-0 h-full overflow-hidden flex flex-col"
+      >
+        <!-- Mobile Header Trigger -->
+        <div
+          class="md:hidden fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-50 flex items-center px-4 justify-between shadow-sm"
+        >
+          <div class="flex items-center text-blue-900 font-bold text-lg">
+            Học Cùng AI
+          </div>
+          <button id="mobile-menu-btn" class="p-2 text-gray-600">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+        </div>
+
+        <div
+          id="content-scroll-area"
+          class="flex-1 p-4 md:p-12 overflow-y-auto custom-scrollbar"
+        >
+          <div class="max-w-5xl mx-auto pb-20">
+            <!-- Content injected via JS -->
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- POPUP MODAL -->
+    <div
+      id="feature-modal"
+      class="fixed inset-0 z-[60] hidden flex items-center justify-center p-4"
+    >
+      <div
+        class="absolute inset-0 bg-slate-900/70 backdrop-blur-sm transition-opacity opacity-0"
+        id="modal-backdrop"
+      ></div>
+      <div
+        class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden transform scale-95 opacity-0 transition-all duration-300 flex flex-col max-h-[90vh]"
+        id="modal-content"
+      >
+        <button
+          onclick="closeModal()"
+          class="absolute top-4 right-4 z-10 bg-black/10 hover:bg-black/20 text-slate-600 rounded-full p-2 transition-colors backdrop-blur-md"
+        >
+          <span class="material-symbols-outlined font-bold">close</span>
+        </button>
+
+        <!-- Modal Image Area (UPDATED) -->
+        <div
+          id="modal-header-bg"
+          class="w-full py-10 flex justify-center relative shrink-0 transition-colors duration-300"
+        >
+          <div
+            id="modal-image-wrapper"
+            class="bg-white p-1 shadow-2xl transition-colors duration-300"
+          >
+            <img
+              id="modal-image"
+              src=""
+              alt="Chi tiết"
+              class="max-h-64 max-w-full rounded-lg object-contain"
+            />
+          </div>
+        </div>
+
+        <div class="p-8 overflow-y-auto custom-scrollbar text-center">
+          <div id="modal-tag-container" class="mb-4 flex justify-center"></div>
+          <h3
+            id="modal-title"
+            class="text-3xl font-extrabold text-slate-900 mb-4"
+          >
+            Title
+          </h3>
+          <div class="prose prose-lg text-slate-600 leading-relaxed mx-auto">
+            <p id="modal-desc"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATA & LOGIC -->
+    <script>
+      /* 
+        HƯỚNG DẪN CHÈN ẢNH TỪ MÁY TÍNH (LOCAL):
+        1. Tạo thư mục tên 'images' nằm cùng chỗ với file index.html này.
+        2. Copy ảnh vào thư mục 'images'.
+        3. Sửa đường dẫn trong guideData bên dưới thành: './images/ten-anh.jpg'
+      */
+
+      // --- DATA STRUCTURE: Updated to Pair Content + Image ---
+      const guideData = [
+        {
+          id: 1,
+          title: "TẢI ỨNG DỤNG",
+          icon: "download",
+          theme: "blue",
+          description:
+            "Hướng dẫn cài đặt ứng dụng chi tiết trên 3 nền tảng: Website, Windows và Điện thoại.",
+          role: "Khách / Học sinh",
+          steps: [
+            {
+              title: "Cách 1: Luyện thi trực tiếp trên Trình duyệt Web",
+              subSteps: [
+                {
+                  text: "1. Mở trình duyệt (Chrome, Cốc Cốc, Edge) và truy cập địa chỉ: <strong>https://hoccungai.vn/luyenthi</strong><br>2. Tại giao diện chính, nhấn vào nút <strong>'Ứng dụng Web'</strong> (biểu tượng quả cầu) ở bên phải.",
+                  img: "./images/b1h1-ung-dung-web.png",
+                },
+                {
+                  text: "3. Hệ thống sẽ chuyển hướng bạn ngay lập tức vào màn hình đăng nhập.",
+                  img: "./images/b1h2-chon-dot-thi.png",
+                },
+              ],
+            },
+            {
+              title: "Cách 2: Tải và cài đặt trên máy tính Windows",
+              subSteps: [
+                {
+                  text: "1. Truy cập website và tìm mục tải xuống.<br>2. Nhấn vào ô <strong>'Tải về cho Windows'</strong> (biểu tượng cửa sổ Windows màu xanh).",
+                  img: "./images/b1h3-ung-dung-win.png",
+                },
+                {
+                  text: "3. Mở file .exe vừa tải về để cài đặt phần mềm.",
+                  img: "./images/b1h4-chay-ung-dung-win.png",
+                },
+              ],
+            },
+            {
+              title: "Cách 3: Cài đặt trên điện thoại (Android & iOS)",
+              subSteps: [
+                {
+                  text: "1. Mở CH Play (Android) hoặc App Store (iOS).",
+                  // Hiển thị 2 ảnh song song
+                  images: [
+                    "./images/b1h7-logo-play.png",
+                    "./images/b1h8-logo-store.png",
+                  ],
+                },
+                {
+                  text: "2. Tìm kiếm từ khóa: <strong>'Học Cùng AI - AISAVA'</strong>.<br>3. Chọn ứng dụng (Icon Mèo Xanh) và nhấn Cài đặt.",
+                  images: [
+                    "./images/b1h5-CH-play.png",
+                    "./images/b1h6-Appstore.png",
+                  ],
+                },
+              ],
+              notes: ["Ứng dụng tương thích với cả Tablet và Smartphone."],
+            },
+          ],
+        },
+        {
+          id: 2,
+          title: "ĐĂNG NHẬP HỆ THỐNG",
+          icon: "login",
+          theme: "indigo",
+          description: "Quy trình xác thực tài khoản an toàn qua Email.",
+          role: "Học sinh",
+          steps: [
+            {
+              title: "Bước 1: Nhập thông tin",
+              subSteps: [
+                {
+                  text: "Nhập <strong>Địa chỉ Email</strong> của bạn vào ô trống. Hoặc chọn đăng nhập nhanh bằng <strong>Google / Facebook</strong>.",
+                  img: "./images/b2h1-nhap-email.png",
+                },
+              ],
+            },
+            {
+              title: "Bước 2: Xác thực OTP",
+              subSteps: [
+                {
+                  text: "Kiểm tra Email để lấy mã OTP (6 số).",
+                  img: "./images/b2h2-otp.png",
+                },
+                {
+                  text: "Nhập mã OTP vào ứng dụng và nhấn <strong>Gửi</strong>.",
+                  img: "./images/b2h2-nhap-otp.png",
+                },
+              ],
+            },
+            {
+              title: "Bước 3: Chọn kỳ thi",
+              subSteps: [
+                {
+                  text: "Chọn <strong>'Thi tuyển sinh lớp 10'</strong> hoặc <strong>'Thi tốt nghiệp THPT'</strong>.",
+                  img: "./images/b2h4-chon-dot-thi.png",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 3,
+          title: "MỞ KHOÁ ĐỀ THI",
+          icon: "credit_card",
+          theme: "emerald",
+          description: "Hướng dẫn mua thẻ cào và thanh toán online.",
+          role: "Học sinh / Phụ huynh",
+          steps: [
+            {
+              title: "Giai đoạn 1: Xác định cần Ôn luyện thi",
+              subSteps: [
+                {
+                  text: "1. Sau khi chọn <strong>Đợt thi</strong>. Tiếp theo, chọn môn thi muốn mở khoá.",
+                  img: "./images/b3h1-chon-mon-thi.png",
+                },
+                {
+                  text: "2. Bấm vào đề thi có biểu tượng <strong>Ổ khóa màu vàng</strong>.",
+                  img: "./images/b3h2-chon-mo-khoa.png",
+                },
+                {
+                  text: "2. Nhấn nút <strong>'Tiếp tục'</strong> tại bảng thông báo chưa mua gói.",
+                  img: "./images/b3h3-popup-chua-mua-goi.png",
+                },
+              ],
+            },
+            {
+              title: "Giai đoạn 2: Chọn hình thức thanh toán",
+              subSteps: [
+                {
+                  text: "Màn hình hiện ra 2 tab: <strong>Thẻ cào</strong> và <strong>Thanh toán Online</strong>.",
+                  img: "./images/b3h4-hinh-thuc-thanh-toan.png",
+                },
+              ],
+            },
+            {
+              title: "Phương thức A: SỬ DỤNG THẺ CÀO",
+              subSteps: [
+                {
+                  text: "1. Cào lớp tráng bạc trên thẻ để lấy mã thẻ bên dưới.",
+                  img: "./images/b3h6-the-cao.jpg",
+                },
+                {
+                  text: "2. Nhập <strong>Mã thẻ</strong> vào ô tương ứng rồi nhấn 'Kích hoạt'.",
+                  img: "./images/b3h5-nhap-ma-the.png",
+                },
+              ],
+            },
+            {
+              title: "Phương thức B: THANH TOÁN ONLINE",
+              subSteps: [
+                {
+                  text: "1. Chọn tab <strong>Thanh toán Online</strong> -> Cổng <strong>VNPAY</strong>.",
+                  img: "./images/b3h7-vnpay.png",
+                },
+                {
+                  text: "2. Quét mã QR bằng ứng dụng ngân hàng.",
+                  img: "./images/b3h8-ngan-hang.png",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 4,
+          title: "ÔN LUYỆN KIẾN THỨC & LÀM BÀI TẬP",
+          icon: "menu_book",
+          theme: "orange",
+          description: "Hướng dẫn chọn môn và làm bài tập.",
+          role: "Học sinh",
+          steps: [
+            {
+              title: "Bước 1: Chọn Tỉnh thành và Môn thi",
+              subSteps: [
+                {
+                  text: "Chọn Tỉnh thành nơi bạn muốn thi. Theo từng Tỉnh thành sẽ áp dụng các đề thi riêng biệt <strong>(VD: Thi tuyển sinh lớp 10 - Vĩnh Long)</strong>.",
+                  images: [
+                    "./images/b4h1-chon-mon-thi.png",
+                    "./images/b4h2-chon-tinh-thanh.png",
+                  ],
+                },
+                {
+                  text: "Chọn Môn học (Toán, Văn, Anh...).",
+                  img: "./images/b4h3-chon-mon.png",
+                },
+              ],
+            },
+            {
+              title: "Bước 2: Xem Lý thuyết theo chủ đề",
+              subSteps: [
+                {
+                  text: "Chọn vào mục <strong>'Tóm tắt kiến thức'</strong> để xem file tài liệu PDF.",
+                  img: "./images/b4h4-xem-tom-tat-kien-thuc.png",
+                },
+                {
+                  text: "Tóm tắt kiến thức cô đọng lại nội dung cần thiết của chương trình. Giúp học sinh củng cố kiến thức về nội dung cần ôn tập.",
+                  img: "./images/b4h5-xem-noi-dung-tom-tat-kien-thuc.png",
+                },
+              ],
+            },
+            {
+              title: "Bước 3: Làm Trắc nghiệm",
+              subSteps: [
+                {
+                  text: "Phần BÀI TẬP LUYỆN TẬP &rarr; Chọn TRẮC NGHIỆM.",
+                  img: "./images/b4h7-chon-trac-nghiem.png",
+                },
+                {
+                  text: "Chọn đáp án A/B/C/D. Hệ thống báo Đúng/Sai ngay lập tức.",
+                  images: [
+                    "./images/b4h8-cau-hoi-trac-nghiem.png",
+                    "./images/b4h9-cham-diem-trac-nghiem.png",
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Bước 4: Làm Tự luận & AI Chấm điểm",
+              subSteps: [
+                {
+                  text: "1. Chọn tab <strong>TỰ LUẬN</strong> để xem đề bài và giải từng câu hỏi. ",
+                  img: "./images/b4h10-chon-tu-luan.png",
+                },
+                {
+                  text: "2. Làm bài ra giấy hoặc gõ trực tiếp. Để nộp bài làm trên giấy: Nhấn nút <strong>'Tải hình'</strong>.",
+                  img: "./images/b4h10-lam-tu-luan.png",
+                },
+                {
+                  text: "3. Sau khi nộp, xem kết quả AI chấm điểm và nhận xét.",
+                  images: [
+                    "./images/b4h11-kq-tu-luan.png",
+                    "./images/b4h11-kq-tu-luan2.png",
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 5,
+          title: "CẤU TRÚC ĐỀ THI & LUYỆN THI",
+          icon: "edit_document",
+          theme: "rose",
+          description: "Quy trình làm bài thi thử hoàn chỉnh.",
+          role: "Học sinh",
+          steps: [
+            {
+              title: "Cấu trúc đề thi Chuẩn Bộ GD&ĐT",
+              subSteps: [
+                {
+                  text: "Đề thi trên hệ thống được xây dựng bám sát <strong>cấu trúc đề thi chính thức</strong> của Bộ Giáo dục và Đào tạo ban hành cho năm học hiện tại. <br>Nội dung luôn được cập nhật mới nhất để phục vụ 2 kỳ thi trọng điểm: <strong>Tuyển sinh lớp 10</strong> và <strong>Tốt nghiệp THPT</strong>.",
+                  images: [
+                    "./images/Đề Địa lí - Copy-images-0.jpg",
+                    "./images/Đề Địa lí - Copy-images-1.jpg",
+                    "./images/Đề Địa lí - Copy-images-2.jpg",
+                    "./images/Đề Địa lí - Copy-images-3.jpg",
+                  ],
+                },
+              ],
+            },
+            {
+              title: "Giao diện Ôn luyện đề thi",
+              subSteps: [
+                {
+                  text: "1. Chọn môn cần ôn luyện thi.",
+                  img: "./images/b5h1-chon-mon.png",
+                },
+                {
+                  text: "2. Chọn vào một đề thi và sau đó bắt đầu trải nghiệm đề thi",
+                  img: "./images/b5h2-chon-de-thi.png",
+                },
+                {
+                  text: "3. Giao diện phòng thi ảo.",
+                  img: "./images/b5h3-giao-dien-lam-bai.png",
+                },
+              ],
+              // Interactive Hashtags
+              interactiveFeatures: [
+                {
+                  name: "Đồng hồ",
+                  color: "blue",
+                  image: "./images/b5h4-dong-ho.png", // Bạn hãy sửa đường dẫn ảnh tại đây
+                  desc: "Đếm ngược thời gian làm bài, giúp học sinh quản lý thời gian hiệu quả.",
+                },
+                {
+                  name: "Nộp bài",
+                  color: "green",
+                  image: "./images/b5h6-nut-nop-bai.png", // Bạn hãy sửa đường dẫn ảnh tại đây
+                  desc: "Nút nộp bài. Khi bấm sẽ hiện cảnh báo nếu còn câu chưa làm.",
+                },
+                {
+                  name: "Menu câu hỏi",
+                  color: "violet",
+                  image: "./images/b5h8-menu cau hoi.png", // Bạn hãy sửa đường dẫn ảnh tại đây
+                  desc: "Danh sách câu hỏi bên trái giúp chuyển nhanh đến câu cần làm.",
+                },
+                {
+                  name: "Điều hướng",
+                  color: "red",
+                  image: "./images/b5h5-chuyen-cau-hoi.png", // Bạn hãy sửa đường dẫn ảnh tại đây
+                  desc: "Danh sách câu hỏi bên trái giúp chuyển nhanh đến câu cần làm.",
+                },
+              ],
+            },
+            // TÁCH PHẦN 1: CHẤM TRẮC NGHIỆM
+            {
+              title: "Làm & Chấm các câu dạng Trắc nghiệm",
+              notes: ["Hệ thống tự động so sánh với đáp án chuẩn."],
+              subSteps: [
+                {
+                  text: "Với các câu hỏi trắc nghiệm (Trắc nghiệm 4 đáp án, Đúng/Sai, Trả lời ngắn), học sinh thao tác chọn trực tiếp trên màn hình.",
+                },
+                {
+                  text: "Trắc nghiệm 4 đáp án.",
+                  img: "./images/b5h9-trac-nghiem-4-dap-an.png",
+                },
+                {
+                  text: "Trắc nghiệm Đúng/sai.",
+                  img: "./images/b5h11-trac-nghiem-sung-sai.png",
+                },
+                {
+                  text: "Trắc nghiệm trả lời ngắn.",
+                  img: "./images/b5h10-trac-nghiem-tra-loi-ngan.png",
+                },
+
+                {
+                  text: "Hệ thống ghi nhận câu trả lời và ngay lập tức đối chiếu với bộ đáp án chuẩn để xác định kết quả Đúng/Sai (trong chế độ Luyện tập).",
+                },
+              ],
+            },
+            // TÁCH PHẦN 2: CHẤM TỰ LUẬN (AI)
+            {
+              title: "Làm & Chấm Tự luận (AI)",
+              notes: ["Sử dụng công nghệ AI Vision để đọc chữ viết tay."],
+              subSteps: [
+                {
+                  text: "Với câu hỏi Tự luận học sinh có thể viết trực tiếp đáp án lên phần mềm.<br>Hoặc học sinh làm bài ra giấy &rarr; Sau đó nhấn nút <strong>'Tải hình'</strong> để chụp ảnh bài làm và gửi lên hệ thống.",
+                  img: "./images/b5h12-cau-hoi-tu-luan.png",
+                  images: [
+                    "./images/b5h12-cau-hoi-tu-luan.png",
+                    "./images/b5h13-tu-luan-upload-file.png",
+                  ],
+                },
+                {
+                  text: "Hệ thống <strong>Gia sư AI</strong> sẽ phân tích hình ảnh, đọc nội dung chữ viết tay và so sánh với barem điểm.",
+                }
+              ],
+            },
+            {
+              title: "Nộp bài",
+              subSteps: [
+                {
+                  text: "Bấm nút <strong>'Nộp bài'</strong> góc phải. Nếu có câu hỏi học sinh bỏ sót, phần mềm sẽ phát cảnh báo.",
+                  img: "./images/cau-hoi-nop-bai.png",
+                }
+              ],
+            },
+          ],
+        },
+        {
+          id: 6,
+          title: "TRẢ KẾT QUẢ & NHẬN XÉT CỦA GIA SƯ AI",
+          icon: "analytics",
+          theme: "purple",
+          description: "Xem điểm số và lời phê của AI.",
+          role: "AI & Học sinh",
+          steps: [
+            {
+              title: "Tổng quan kết quả",
+              subSteps: [
+                {
+                  text: "Kết quả chấm bài trả về ngay sau khi nộp.",
+                  img: "./images/b6h1-tra-dap-an.png",
+                },
+                {
+                  text: "Xem Tổng điểm, Thời gian làm bài, Số câu Đúng/Sai.",
+                  img: "./images/b6h2-thong-tin-them.png",
+                },
+              ],
+            },
+            {
+              title: "Chi tiết Trắc nghiệm",
+              subSteps: [
+                {
+                  text: "Xem lại từng câu: Màu xanh (Đúng), Màu đỏ (Sai).",
+                  img: "./images/b6h3-cham-trac-nghiem.png",
+                },
+              ],
+            },
+            {
+              title: "Chi tiết Tự luận (AI Chấm)",
+              subSteps: [
+                {
+                  text: "AI khoanh vùng lỗi sai và viết lời phê trực tiếp, giúp học sinh cải thiện kiến thức và củng cố kết quả làm bài trong những lần luyện thi tiếp theo.",
+                  images: [
+                    "./images/1.jpg",
+                    "./images/2.jpg",
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      let activeSectionId = 1;
+
+      // --- DOM ---
+      const navList = document.getElementById("nav-list");
+      const contentContainer = document.querySelector(
+        "#main-content .max-w-5xl"
+      );
+      const contentScrollArea = document.getElementById("content-scroll-area");
+      const sidebar = document.getElementById("sidebar");
+      const sidebarOverlay = document.getElementById("sidebar-overlay");
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const closeSidebarBtn = document.getElementById("close-sidebar-btn");
+
+      // Modal
+      const modal = document.getElementById("feature-modal");
+      const modalBackdrop = document.getElementById("modal-backdrop");
+      const modalContent = document.getElementById("modal-content");
+      const modalImage = document.getElementById("modal-image");
+      const modalImageWrapper = document.getElementById("modal-image-wrapper");
+      const modalHeaderBg = document.getElementById("modal-header-bg");
+      const modalTagContainer = document.getElementById("modal-tag-container");
+      const modalTitle = document.getElementById("modal-title");
+      const modalDesc = document.getElementById("modal-desc");
+
+      // --- FUNCTIONS ---
+
+      function openFeaturePopup(feature, theme) {
+        modalTitle.innerText = feature.name;
+        modalDesc.innerText = feature.desc || "Thông tin chi tiết tính năng.";
+        modalImage.src =
+          feature.image || `https://placehold.co/800x400?text=${feature.name}`;
+
+        const color = feature.color || theme;
+
+        // Dynamic Styles based on Tag Color
+        modalTagContainer.innerHTML = `<span class="inline-block py-1 px-3 rounded-lg bg-${color}-100 text-${color}-700 text-sm font-bold uppercase">Chi tiết</span>`;
+
+        // Updated Image Wrapper Styling: Rectangular, rounded corners, auto size, NO CIRCLE
+        modalImageWrapper.className = `rounded-lg border-4 bg-white p-1 shadow-2xl transition-colors duration-300 mx-auto border-${color}-500 inline-block`;
+        // Updated Header Background: Soft color matching the tag
+        modalHeaderBg.className = `w-full py-10 flex justify-center relative shrink-0 transition-colors duration-300 bg-${color}-50`;
+
+        modal.classList.remove("hidden");
+        setTimeout(() => {
+          modalBackdrop.classList.remove("opacity-0");
+          modalContent.classList.remove("opacity-0", "scale-95");
+          modalContent.classList.add("opacity-100", "scale-100");
+        }, 10);
+      }
+
+      function closeModal() {
+        modalBackdrop.classList.add("opacity-0");
+        modalContent.classList.remove("opacity-100", "scale-100");
+        modalContent.classList.add("opacity-0", "scale-95");
+        setTimeout(() => modal.classList.add("hidden"), 200);
+      }
+      modalBackdrop.onclick = closeModal;
+
+      function renderSidebar() {
+        navList.innerHTML = "";
+        guideData.forEach((section) => {
+          const isActive = section.id === activeSectionId;
+          const button = document.createElement("button");
+
+          let baseClasses =
+            "w-full text-left px-5 py-5 flex items-center group transition-all duration-200 rounded-xl border mb-2 ";
+          let activeClasses = isActive
+            ? `bg-${section.theme}-50 border-${section.theme}-200 text-${section.theme}-900 shadow-sm`
+            : "bg-transparent border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900";
+
+          button.className = baseClasses + activeClasses;
+
+          button.innerHTML = `
+                    <span class="mr-4 p-2.5 rounded-lg transition-colors flex items-center justify-center ${
+                      isActive
+                        ? `bg-${section.theme}-600 text-white`
+                        : "bg-slate-100 text-slate-500"
+                    }">
+                        <span class="material-symbols-outlined">${
+                          section.icon
+                        }</span>
+                    </span>
+                    <div class="flex-1">
+                        <div class="text-base font-bold">${section.title}</div>
+                        <div class="text-xs font-medium text-slate-400 mt-0.5">Bước ${
+                          section.id
+                        }</div>
+                    </div>
+                `;
+          button.onclick = () => {
+            activeSectionId = section.id;
+            renderSidebar();
+            renderContent();
+            if (window.innerWidth < 768) toggleMobileSidebar(false);
+          };
+          navList.appendChild(button);
+        });
+      }
+
+      function renderContent() {
+        const section = guideData.find((s) => s.id === activeSectionId);
+        if (!section) return;
+
+        contentScrollArea.scrollTop = 0;
+
+        let html = `
+                <div class="mb-12 pb-8 border-b border-slate-200 fade-in">
+                    <div class="flex items-center space-x-6 mb-6">
+                        <span class="flex-shrink-0 flex items-center justify-center w-16 h-16 rounded-2xl bg-${section.theme}-600 text-white font-extrabold text-3xl shadow-lg">
+                            ${section.id}
+                        </span>
+                        <div>
+                            <h2 class="text-4xl font-extrabold text-slate-900">${section.title}</h2>
+                        </div>
+                    </div>
+                    <p class="text-xl text-slate-600 pl-24">${section.description}</p>
+                </div>
+                <div class="space-y-12 pl-0 md:pl-6">
+            `;
+
+        section.steps.forEach((step, index) => {
+          const stepNum = index + 1;
+
+          // --- NEW LOOP: PAIR CONTENT TEXT WITH IMAGE ---
+          // Loop through 'subSteps' array
+          let subStepsHtml = "";
+          if (step.subSteps && step.subSteps.length > 0) {
+            subStepsHtml = step.subSteps
+              .map((sub) => {
+                // Logic to handle multiple images
+                let imageContent = "";
+
+                if (sub.images && sub.images.length > 0) {
+                  // Render multiple images in a Grid 2x2 (or 2 columns)
+                  const imgs = sub.images
+                    .map(
+                      (src) => `
+                            <div class="w-full">
+                                <img 
+                                    src="${src}" 
+                                    alt="Minh họa" 
+                                    class="max-w-full h-auto rounded-lg"
+                                    loading="lazy"
+                                />
+                            </div>
+                        `
+                    )
+                    .join("");
+
+                  // Use GRID with 2 columns.
+                  // If 2 images -> 1 row.
+                  // If 4 images -> 2 rows (2x2).
+                  imageContent = `
+                            <div class="grid grid-cols-2 gap-4">
+                                ${imgs}
+                            </div>
+                        `;
+                } else if (sub.img) {
+                  // Render single image
+                  imageContent = `
+                            <img 
+                                src="${sub.img}" 
+                                alt="Minh họa bước thực hiện" 
+                                class="max-w-full h-auto rounded-lg"
+                                loading="lazy"
+                            />
+                        `;
+                }
+
+                return `
+                        <div class="mb-10 last:mb-0 group">
+                            <!-- Text Line -->
+                            <div class="flex items-start mb-4">
+                                <span class="mt-1.5 w-6 h-6 flex items-center justify-center rounded-full bg-${section.theme}-100 text-${section.theme}-600 mr-4 flex-shrink-0">
+                                    <span class="material-symbols-outlined text-sm font-bold">arrow_downward</span>
+                                </span>
+                                <p class="text-lg md:text-xl text-slate-800 font-medium leading-relaxed">${sub.text}</p>
+                            </div>
+                            
+                            <!-- Image Block (NO FRAME) -->
+                            <div class="pl-10">
+                                ${imageContent}
+                            </div>
+                        </div>
+                    `;
+              })
+              .join("");
+          }
+
+          // Interactive Buttons (Updated Styling)
+          let interactiveBlock = "";
+          if (step.interactiveFeatures) {
+            const buttons = step.interactiveFeatures
+              .map((f) => {
+                const fStr = JSON.stringify(f).replace(/"/g, "&quot;");
+                // Dynamic color classes based on f.color
+                const colorClass = f.color
+                  ? `bg-${f.color}-100 text-${f.color}-700 hover:bg-${f.color}-200`
+                  : `bg-slate-100 text-slate-700 hover:bg-slate-200`;
+
+                return `<button onclick="openFeaturePopup(${fStr}, '${section.theme}')" class="px-6 py-3 rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-sm border border-transparent hover:shadow-md mx-2 mb-3 ${colorClass}">
+                    <span class="mr-1">#</span> ${f.name}
+                </button>`;
+              })
+              .join("");
+
+            // Added 'text-center' and 'justify-center'
+            interactiveBlock = `
+                <div class="mt-8 p-6 bg-slate-50/50 rounded-2xl border border-slate-100 text-center">
+                    <div class="text-xs font-extrabold text-slate-400 uppercase tracking-widest mb-4">Các tính năng tương tác</div>
+                    <div class="flex flex-wrap justify-center items-center">
+                        ${buttons}
+                    </div>
+                </div>`;
+          }
+
+          // Render Step Card
+          html += `
+                    <div class="bg-white rounded-3xl shadow-xl shadow-slate-200/60 overflow-hidden ring-1 ring-slate-100 fade-in" style="animation-delay: ${
+                      index * 0.1
+                    }s">
+                        <div class="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-8 py-6">
+                            <h3 class="font-bold text-2xl text-slate-800 flex items-center">
+                                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-${
+                                  section.theme
+                                }-100 text-${
+            section.theme
+          }-600 text-lg font-black mr-4 border border-${section.theme}-200">
+                                    ${stepNum}
+                                </span>
+                                ${step.title}
+                            </h3>
+                        </div>
+                        <div class="p-8 md:p-10">
+                            ${subStepsHtml}
+                            ${interactiveBlock}
+                            ${
+                              step.notes
+                                ? `<div class="mt-6 bg-amber-50 p-4 rounded-lg text-amber-800 text-sm border-l-4 border-amber-400"><strong>Lưu ý:</strong> ${step.notes.join(
+                                    " "
+                                  )}</div>`
+                                : ""
+                            }
+                        </div>
+                    </div>
+                `;
+        });
+
+        html += `</div><div class="h-20"></div>`; // Bottom spacer
+        contentContainer.innerHTML = html;
+      }
+
+      function toggleMobileSidebar(show) {
+        if (show) {
+          sidebar.classList.remove("-translate-x-full");
+          sidebarOverlay.classList.remove("hidden");
+        } else {
+          sidebar.classList.add("-translate-x-full");
+          sidebarOverlay.classList.add("hidden");
+        }
+      }
+      mobileMenuBtn.onclick = () => toggleMobileSidebar(true);
+      closeSidebarBtn.onclick = () => toggleMobileSidebar(false);
+      sidebarOverlay.onclick = () => toggleMobileSidebar(false);
+
+      renderSidebar();
+      renderContent();
+    </script>
+  </body>
+</html>
